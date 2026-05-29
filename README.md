@@ -12,8 +12,8 @@ Training-free composition of pairwise diffusion bridge distributions at inferenc
 ## Links
 
 - Project code: [NecoJac/cs503-compositional-diffusion](https://github.com/NecoJac/cs503-compositional-diffusion)
-- Website source code: [NecoJac/cs503-compositional-diffusion-webpage](https://github.com/NecoJac/cs503-compositional-diffusion-webpage)
-- Website: [cs503-compositional-diffusion-webpage](https://necojac.github.io/cs503-compositional-diffusion-webpage/)
+- Webpage source code: [NecoJac/cs503-compositional-diffusion-webpage](https://github.com/NecoJac/cs503-compositional-diffusion-webpage)
+- Webpage: [cs503-compositional-diffusion-webpage](https://necojac.github.io/cs503-compositional-diffusion-webpage/)
 - Course: [EPFL CS-503 Visual Intelligence, Spring 2026](https://edu.epfl.ch/coursebook/en/visual-intelligence-CS-503)
 
 ## Authors and Contributions
