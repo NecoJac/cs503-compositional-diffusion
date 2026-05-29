@@ -1,0 +1,9 @@
+einops
+datasets
+imageio
+imageio-ffmpeg==0.4.4
+numpy
+pillow
+requests
+scipy
+tqdm

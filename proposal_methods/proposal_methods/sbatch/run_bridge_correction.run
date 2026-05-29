@@ -1,0 +1,44 @@
+#!/bin/bash
+#SBATCH --job-name=dc_bridge
+#SBATCH --partition=gpu
+#SBATCH --nodes=1
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=8
+#SBATCH --mem=32G
+#SBATCH --gres=gpu:1
+#SBATCH --time=2:00:00
+#SBATCH --output=proposal_outputs/sbatch/bridge_correction_%j.out
+
+set -euo pipefail
+
+USER_NAME=${USER:-$(whoami)}
+PROJECT_ROOT=${PROJECT_ROOT:-${SLURM_SUBMIT_DIR:-$PWD}}
+CONDA_ENV=${CONDA_ENV:-cbg_diffusion}
+SCRATCH_ROOT=${DIFFUSION_SCRATCH_ROOT:-/scratch/izar/$USER_NAME/diffusion}
+IMAGE_ROOT=${IMAGENET_LANDSCAPES_ROOT:-$PROJECT_ROOT/data/imagenet_landscapes}
+
+source "/home/$USER_NAME/.bashrc"
+conda activate "$CONDA_ENV"
+
+cd "$PROJECT_ROOT"
+export PYTHONPATH="$PROJECT_ROOT:${PYTHONPATH:-}"
+export DNNLIB_CACHE_DIR="${DNNLIB_CACHE_DIR:-$SCRATCH_ROOT/dnnlib_cache}"
+export HF_HOME="${HF_HOME:-$SCRATCH_ROOT/hf_cache/home}"
+export HF_DATASETS_CACHE="${HF_DATASETS_CACHE:-$SCRATCH_ROOT/hf_cache/datasets}"
+export HF_HUB_CACHE="${HF_HUB_CACHE:-$SCRATCH_ROOT/hf_cache/hub}"
+export TMPDIR="${TMPDIR:-$SCRATCH_ROOT/tmp}"
+mkdir -p "$DNNLIB_CACHE_DIR" "$HF_HOME" "$HF_DATASETS_CACHE" "$HF_HUB_CACHE" "$TMPDIR" "$PROJECT_ROOT/proposal_outputs/sbatch"
+
+python -m pip install --user -r proposal_methods/requirements.txt
+
+srun python -m proposal_methods.generate_method \
+  --method bridge_correction \
+  --all-default-classes \
+  --image-indices 0,1 \
+  --image-root "$IMAGE_ROOT" \
+  --output-root proposal_outputs/single_method \
+  --n-step 40 \
+  --solver heun \
+  --guidance-scale 1.0 \
+  --coupling-strength 0.25 \
+  --init-correction-steps 4
